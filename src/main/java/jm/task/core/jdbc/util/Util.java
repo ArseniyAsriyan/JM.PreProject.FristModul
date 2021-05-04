@@ -23,7 +23,7 @@ public class Util {
         try {
             Class.forName(DRIVER);
             connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-
+            connection.setAutoCommit(false);
         } catch (Exception e) {
             System.err.println("Не удалось установить соединение с базой данных");
             e.printStackTrace();
