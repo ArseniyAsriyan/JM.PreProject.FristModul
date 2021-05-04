@@ -5,8 +5,12 @@
       <configuration>
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="Hibernate" />
-        <datasource-mapping />
-        <naming-strategy-map />
+        <datasource-mapping>
+          <factory-entry name="TaskJDBC" value="485cfcac-63d9-499e-a6c5-8cefdc39a7c9" />
+        </datasource-mapping>
+        <naming-strategy-map>
+          <unit-entry name="TaskJDBC" />
+        </naming-strategy-map>
       </configuration>
     </facet>
   </component>
@@ -43,5 +47,8 @@
     <orderEntry type="library" name="Maven: com.sun.istack:istack-commons-runtime:3.0.7" level="project" />
     <orderEntry type="library" name="Maven: org.jvnet.staxex:stax-ex:1.8" level="project" />
     <orderEntry type="library" name="Maven: com.sun.xml.fastinfoset:FastInfoset:1.2.15" level="project" />
+    <orderEntry type="library" name="Maven: com.mchange:c3p0:0.9.5.5" level="project" />
+    <orderEntry type="library" name="Maven: com.mchange:mchange-commons-java:0.2.19" level="project" />
+    <orderEntry type="library" name="Maven: org.hibernate:hibernate-c3p0:5.4.27.Final" level="project" />
   </component>
 </module>

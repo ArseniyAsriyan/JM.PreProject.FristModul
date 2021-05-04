@@ -52,7 +52,14 @@ public class Util {
 
             //Отключить ведение логов
             Logger log = Logger.getLogger("org.hibernate");
-            log.setLevel(Level.OFF);
+            log.setLevel(Level.WARNING);
+
+            //тут мы избавились от лога «WARN: HHH10001002: Using Hibernate built-in connection pool (not for production use!)» подключили через мавен и используем пул соединения с3р0
+            properties.put(Environment.C3P0_MIN_SIZE, 5);
+            properties.put(Environment.C3P0_MAX_SIZE, 200);
+            properties.put(Environment.C3P0_MAX_STATEMENTS, 200);
+            Logger log2 = Logger.getLogger("com.mchange");
+            log2.setLevel(Level.WARNING);
 
             //CURRENT_SESSION_CONTEXT_CLASS Определение контекста для SessionFactory.getCurrentSession()обработки.
             properties.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
@@ -66,7 +73,6 @@ public class Util {
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                     .applySettings(configuration.getProperties()).build();
             sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
