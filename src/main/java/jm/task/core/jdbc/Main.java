@@ -8,6 +8,7 @@ import jm.task.core.jdbc.util.Util;
 
 import java.sql.*;
 
+
 public class Main {
 
 
@@ -34,6 +35,17 @@ public class Main {
                 System.out.println(user.getName() + " " + user.getLastName());
             }
         }
+//        Connection con = Util.getSQLConnection();
+//        try {
+//            Statement st = con.createStatement();
+//            ResultSet rs = st.executeQuery("SELECT * FROM users");
+//            rs.next();
+//            rs.next();
+//            System.out.println(rs.getString(2));
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+
         System.out.println("Время выполнения прогреммы - " + (System.currentTimeMillis() - startTime));
 
 
