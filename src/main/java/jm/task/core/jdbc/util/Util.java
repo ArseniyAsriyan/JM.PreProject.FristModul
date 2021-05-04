@@ -3,6 +3,9 @@ package jm.task.core.jdbc.util;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import jm.task.core.jdbc.model.User;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -45,7 +48,11 @@ public class Util {
             properties.put(Environment.DIALECT, "org.hibernate.dialect.MySQL8Dialect");
 
             //SHOW_SQL Включить запись сгенерированного SQL в консоль
-            properties.put(Environment.SHOW_SQL, "true");
+            properties.put(Environment.SHOW_SQL, "false");
+
+            //Отключить ведение логов
+            Logger log = Logger.getLogger("org.hibernate");
+            log.setLevel(Level.OFF);
 
             //CURRENT_SESSION_CONTEXT_CLASS Определение контекста для SessionFactory.getCurrentSession()обработки.
             properties.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
