@@ -19,10 +19,12 @@ public class UserDaoJDBCImpl implements UserDao {
                 "lastname VARCHAR(50) NOT NULL, age INT NOT NULL, PRIMARY KEY (id) )";
         try (Statement statement = connection.createStatement()) {
             statement.execute(sqlCommand);
+            connection.commit();
             connection.close();
         } catch (SQLException e) {
             try {
                 connection.rollback();
+                connection.close();
             } catch (SQLException ex) {
             }
         }
@@ -34,14 +36,15 @@ public class UserDaoJDBCImpl implements UserDao {
         String sqlCommand = "DROP TABLE users";
         try (Statement statement = connection.createStatement()) {
             statement.execute(sqlCommand);
+            connection.commit();
             connection.close();
         } catch (SQLException e) {
             try {
                 connection.rollback();
+                connection.close();
             } catch (SQLException ex) {
             }
         }
-
     }
 
     public void saveUser(String name, String lastName, byte age) {
@@ -55,15 +58,12 @@ public class UserDaoJDBCImpl implements UserDao {
             preparedStatement.setByte(3, age);
             preparedStatement.executeUpdate();
             connection.commit();
+            connection.close();
         } catch (SQLException e) {
             try {
                 connection.rollback();
-            } catch (SQLException ex) {
-            }
-        } finally {
-            try {
                 connection.close();
-            } catch (SQLException e) {
+            } catch (SQLException ex) {
             }
         }
     }
@@ -73,10 +73,13 @@ public class UserDaoJDBCImpl implements UserDao {
         try (Statement statement = connection.createStatement()) {
             String sqlCommand = "DELETE FROM users WHERE id";
             statement.execute(sqlCommand);
+            connection.commit();
+            connection.close();
         } catch (SQLException e) {
             try {
                 connection.rollback();
-            } catch (SQLException throwables) {
+                connection.close();
+            } catch (SQLException ex) {
             }
         }
     }
@@ -101,6 +104,7 @@ public class UserDaoJDBCImpl implements UserDao {
         } catch (SQLException e) {
             try {
                 connection.rollback();
+                connection.close();
             } catch (SQLException ex) {
             }
         }
@@ -117,6 +121,7 @@ public class UserDaoJDBCImpl implements UserDao {
         } catch (SQLException e) {
             try {
                 connection.rollback();
+                connection.close();
             } catch (SQLException ex) {
             }
         }
