@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
         userDao.dropUsersTable();
     }
 
-    public void saveUser(String name, String lastName, byte age) throws SQLException {
+    public void saveUser(String name, String lastName, byte age) {
         userDao.saveUser(name, lastName, age);
     }
 

@@ -1,6 +1,5 @@
 package jm.task.core.jdbc.dao;
 
-import jm.task.core.jdbc.Main;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 
@@ -16,72 +15,76 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void createUsersTable() {
         Connection connection = Util.getSQLConnection();
-        String SQLCommand = "CREATE TABLE users( id INT NOT NULL AUTO_INCREMENT, name VARCHAR(50) NOT NULL, " +
+        String sqlCommand = "CREATE TABLE users( id INT NOT NULL AUTO_INCREMENT, name VARCHAR(50) NOT NULL, " +
                 "lastname VARCHAR(50) NOT NULL, age INT NOT NULL, PRIMARY KEY (id) )";
-
         try (Statement statement = connection.createStatement()) {
-            statement.execute(SQLCommand);
+            statement.execute(sqlCommand);
             connection.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+            }
         }
-
     }
 
     public void dropUsersTable() {
         Connection connection = Util.getSQLConnection();
-        String SQLCommand = "DROP TABLE users";
-        try (Statement statement = connection.createStatement()){
-            statement.execute(SQLCommand);
+        String sqlCommand = "DROP TABLE users";
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(sqlCommand);
             connection.close();
         } catch (SQLException e) {
-//            e.printStackTrace();
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+            }
         }
-
     }
 
-    public void saveUser(String name, String lastName, byte age) throws SQLException {
-        Connection connection = Util.getSQLConnection();
-        String SQLCommand = "INSERT INTO users (name, lastName, age) VALUES (?, ?, ?)";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SQLCommand)) {
-            connection.setAutoCommit(false);
+    public void saveUser(String name, String lastName, byte age) {
+        Connection connection = null;
+        String sqlCommand = "INSERT INTO users (name, lastName, age) VALUES (?, ?, ?)";
+        try {
+            connection = Util.getSQLConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlCommand);
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, lastName);
             preparedStatement.setByte(3, age);
             preparedStatement.executeUpdate();
-//            connection.setAutoCommit(false);
             connection.commit();
-            connection.close();
         } catch (SQLException e) {
-            e.printStackTrace();
             try {
                 connection.rollback();
-            } catch (SQLException ex2) {
-                ex2.printStackTrace();
-
+            } catch (SQLException ex) {
             }
-            connection.close();
-
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+            }
         }
     }
 
     public void removeUserById(long id) {
         Connection connection = Util.getSQLConnection();
         try (Statement statement = connection.createStatement()) {
-            String SQLCommand = "DELETE FROM users WHERE id";
-            statement.execute(SQLCommand);
-            connection.close();
+            String sqlCommand = "DELETE FROM users WHERE id";
+            statement.execute(sqlCommand);
         } catch (SQLException e) {
-            e.printStackTrace();
+            try {
+                connection.rollback();
+            } catch (SQLException throwables) {
+            }
         }
     }
 
     public List<User> getAllUsers() {
         Connection connection = Util.getSQLConnection();
-        String SQLCommand = "SELECT * FROM users";
+        String sqlCommand = "SELECT * FROM users";
         List<User> listOfUsers = new ArrayList<>();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SQLCommand);
-             ResultSet resultSet = preparedStatement.executeQuery(SQLCommand)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlCommand);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 User user = new User();
                 user.setId(resultSet.getLong("id"));
@@ -94,11 +97,9 @@ public class UserDaoJDBCImpl implements UserDao {
             }
             connection.close();
         } catch (SQLException e) {
-            e.printStackTrace();
             try {
                 connection.rollback();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
+            } catch (SQLException ex) {
             }
         }
         return listOfUsers;
@@ -106,13 +107,16 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void cleanUsersTable() {
         Connection connection = Util.getSQLConnection();
-        String SQLCommand = "DELETE FROM users";
+        String sqlCommand = "DELETE FROM users";
         try (Statement statement = connection.createStatement()) {
-            statement.execute(SQLCommand);
+            statement.execute(sqlCommand);
+            connection.commit();
             connection.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+            }
         }
-
     }
 }
