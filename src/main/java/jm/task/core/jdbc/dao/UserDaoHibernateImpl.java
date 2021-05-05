@@ -32,6 +32,7 @@ public class UserDaoHibernateImpl implements UserDao {
         Transaction transaction = null;
         try (Session session = Util.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
+            //полагаю, что SQL запрос будет работать быстрее, это просто для разнообразия
             session.createEntityGraph(User.class);
             transaction.commit();
         } catch(Exception e) {
@@ -88,7 +89,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public List<User> getAllUsers() {
         List<User> list = null;
         try (Session session = Util.getSessionFactory().openSession()) {
-            list = session.createQuery("From " + User.class.getSimpleName()).list();
+            list = session.createQuery("from " + User.class.getSimpleName()).list();
         } catch (Exception e) {
         }
         return list;
